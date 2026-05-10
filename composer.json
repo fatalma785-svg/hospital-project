@@ -1,7 +1,5 @@
 {
-  "name": "hospital-project",
-  "description": "Hospital management system",
-  "require": {
-    "php": "^8.0"
-  }
+    "require": {
+        "php": "^8.2"
+    }
 }
