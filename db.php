@@ -1,17 +1,15 @@
 <?php
-// جلب البيانات من إعدادات السيرفر تلقائياً (أكثر أماناً)
-$servername = getenv('MYSQLHOST') ?: "localhost";
-$username   = getenv('MYSQLUSER') ?: "root";
-$password   = getenv('MYSQLPASSWORD') ?: "";
-$dbname     = getenv('MYSQLDATABASE') ?: "hospital_db"; 
-$port       = getenv('MYSQLPORT') ?: "3306";
+$servername = "mysql.railway.internal";
+$username = "root";
+$password = "xyeLrNzhIZfDhCPALeysdEUPhzMtQVVa"; // Default XAMPP password is empty
+$dbname = "railway"; // This must match the name in phpMyAdmin
+$port       = "3306"; // 
 
-// محاولة الاتصال
-$conn = @new mysqli($servername, $username, $password, $dbname, $port);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-// التحقق من الاتصال بدون "قتل" الصفحة
+// Check connection
 if ($conn->connect_error) {
-    // إذا فشل الاتصال، الموقع بيستمر بالعمل بس بيعطي رسالة مخفية
-    echo "";
+    die("Connection failed: " . $conn->connect_error);
 }
 ?>
