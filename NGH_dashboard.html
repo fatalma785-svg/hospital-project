@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGH Dashboard</title>
+    <link rel="stylesheet" href="NGH_main.css">
+	<link rel="stylesheet" href="footerandheader.css">
+
+</head>
+<body>
+
+<div class="dash-header">
+    <div class="header-left">
+        <img src="logo.png" class="dash-logo" alt="Logo">
+        <div>
+            <h2>National Guard Hospital</h2>
+            <p id="welcomeUser">Welcome</p>
+        </div>
+    </div>
+
+<div class="header-nav">
+    <button class="btn btn-light" onclick="location.href='NGH_dashboard.html'">Dashboard</button>
+    
+    <button class="btn btn-light" onclick="location.href='NGH_capacity.html'">Department</button>
+    
+    <button class="btn btn-light" onclick="location.href='future.html'">Future Forecast</button>
+
+    <button class="btn btn-danger" onclick="location.href='logout.php'">Logout</button>
+</div>
+</div>
+
+<div class="container">
+    <div class="page-title">
+        <p>Real-time hospital occupancy and patient admission control</p>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Total Beds</h3>
+            <p id="totalBeds">80</p>
+        </div>
+        <div class="card">
+            <h3>Occupied</h3>
+            <p id="occupiedBeds">0</p>
+        </div>
+        <div class="card">
+            <h3>Available</h3>
+            <p id="availableBeds">0</p>
+        </div>
+        <div class="card">
+            <h3>Occupancy Rate</h3>
+            <p id="rate">0%</p>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="panel">
+            <h3>Patient Management</h3>
+
+            <div class="search-row">
+                <div style="flex:1;">
+                    <label>Patient MRN</label>
+                    <input type="text" id="mrn" placeholder="Enter Patient MRN">
+                </div>
+            </div>
+
+            <div id="patientInfo" class="patient-box patient-compact hidden">
+                <div class="patient-grid">
+                    <div><strong>Name:</strong> <span id="pName">-</span></div>
+                    <div><strong>Age:</strong> <span id="pAge">-</span></div>
+                    <div><strong>Diagnosis:</strong> <span id="pDiag">-</span></div>
+                    <div><strong>Status:</strong> <span id="pStatus">-</span></div>
+                    <div><strong>Department:</strong> <span id="pDept">-</span></div>
+                </div>
+            </div>
+
+            <div class="compact-actions">
+                <select id="dept" style="width:180px;">
+                    <option value="ER">ER</option>
+                    <option value="ICU">ICU</option>
+                    <option value="D1">D1</option>
+                    <option value="D2">D2</option>
+                    <option value="D3">D3</option>
+                </select>
+
+                <button class="btn btn-primary small-btn" onclick="admitPatient()">Admit</button>
+                <button class="btn btn-danger small-btn" onclick="dischargePatient()">Discharge</button>
+            </div>
+
+            <p id="msg" class="msg"></p>
+        </div>
+
+        <div class="panel">
+            <h3>System Alert</h3>
+            <div id="alertBox" class="alert-normal">
+                System is operating normally.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    © 2026 NGH Hospital System
+</div>
+
+<div id="fullDeptModal" class="modal-overlay hidden">
+    <div class="modal">
+        <h3 id="fullDeptTitle">Department Full</h3>
+        <p id="fullDeptMessage">
+            This department is full. Please go to the Department page to review available departments or transfer a patient.
+        </p>
+        <div class="btn-row">
+            <button class="btn btn-light" onclick="closeFullDeptModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="goToDepartmentPage()">Go to Department Page</button>
+        </div>
+    </div>
+</div>
+
+<script>
+if (localStorage.getItem("NGH_AUTH") !== "true") {
+    window.location = "login.php";
+}
+
+const user = localStorage.getItem("NGH_USER") || "User";
+document.getElementById("welcomeUser").innerText = "Welcome, " + user;
+
+document.getElementById("fullDeptModal").style.display = "none";
+
+function logout() {
+    localStorage.clear();
+    window.location = "login.php";
+}
+
+function showMessage(text, ok = true) {
+    const msg = document.getElementById("msg");
+    msg.innerText = text;
+    msg.className = ok ? "msg success" : "msg error";
+}
+
+function clearPatientCard() {
+    document.getElementById("patientInfo").classList.add("hidden");
+    document.getElementById("pName").innerText = "-";
+    document.getElementById("pAge").innerText = "-";
+    document.getElementById("pDiag").innerText = "-";
+    document.getElementById("pStatus").innerText = "-";
+    document.getElementById("pDept").innerText = "-";
+}
+
+function openFullDeptModal(departmentName) {
+    const modal = document.getElementById("fullDeptModal");
+    document.getElementById("fullDeptTitle").innerText = "Department Full";
+    document.getElementById("fullDeptMessage").innerText =
+        departmentName + " is full. Please go to the Department page to transfer or choose another department.";
+    modal.classList.remove("hidden");
+    modal.style.display = "flex";
+}
+
+function closeFullDeptModal() {
+    const modal = document.getElementById("fullDeptModal");
+    modal.classList.add("hidden");
+    modal.style.display = "none";
+}
+
+function goToDepartmentPage() {
+    window.location.href = "NGH_capacity.html";
+}
+
+function loadDashboardData() {
+    fetch("dashboard_data.php")
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("totalBeds").innerText = data.totalBeds;
+            document.getElementById("occupiedBeds").innerText = data.occupied;
+            document.getElementById("availableBeds").innerText = data.available;
+            document.getElementById("rate").innerText = data.rate + "%";
+
+            const alertBox = document.getElementById("alertBox");
+
+            if (data.rate >= 90) {
+                alertBox.className = "alert-critical";
+                alertBox.innerText = "Critical occupancy level. Immediate action is required.";
+            } else if (data.rate >= 75) {
+                alertBox.className = "alert-warning";
+                alertBox.innerText = "High occupancy detected. Please monitor admissions closely.";
+            } else {
+                alertBox.className = "alert-normal";
+                alertBox.innerText = "System is operating normally.";
+            }
+        });
+}
+
+function searchPatient() {
+    const mrn = document.getElementById("mrn").value.trim();
+
+    if (!mrn) {
+        clearPatientCard();
+        return;
+    }
+
+    fetch("get_patient.php?mrn=" + encodeURIComponent(mrn))
+        .then(res => res.json())
+        .then(data => {
+            if (data.ok) {
+                document.getElementById("patientInfo").classList.remove("hidden");
+                document.getElementById("pName").innerText = data.name || "-";
+                document.getElementById("pAge").innerText = data.age || "-";
+                document.getElementById("pDiag").innerText = data.diagnosis || "-";
+                document.getElementById("pStatus").innerText = data.status || "-";
+                document.getElementById("pDept").innerText = data.department || "-";
+            } else {
+                clearPatientCard();
+            }
+        })
+        .catch(() => {
+            clearPatientCard();
+        });
+}
+
+function admitPatient() {
+    const mrn = document.getElementById("mrn").value.trim();
+    const dept = document.getElementById("dept").value;
+
+    if (!mrn) {
+        showMessage("Please enter patient MRN first.", false);
+        return;
+    }
+
+    closeFullDeptModal();
+
+    fetch("admit_patient.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "mrn=" + encodeURIComponent(mrn) + "&dept=" + encodeURIComponent(dept)
+    })
+    .then(res => res.json())
+    .then(data => {
+        showMessage(data.message, data.ok);
+
+        if (data.ok) {
+            searchPatient();
+            loadDashboardData();
+            return;
+        }
+
+        if (data.full === true) {
+            openFullDeptModal(data.department || dept);
+        }
+    })
+    .catch(() => showMessage("Admit failed.", false));
+}
+
+function dischargePatient() {
+    const mrn = document.getElementById("mrn").value.trim();
+
+    if (!mrn) {
+        showMessage("Please enter patient MRN first.", false);
+        return;
+    }
+
+    fetch("discharge_patient.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "mrn=" + encodeURIComponent(mrn)
+    })
+    .then(res => res.json())
+    .then(data => {
+        showMessage(data.message, data.ok);
+        if (data.ok) {
+            searchPatient();
+            loadDashboardData();
+        }
+    })
+    .catch(() => showMessage("Discharge failed.", false));
+}
+
+document.getElementById("mrn").addEventListener("input", searchPatient);
+
+loadDashboardData();
+</script>
+
+</body>
+</html>

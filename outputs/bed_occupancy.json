@@ -1,0 +1,79 @@
+[
+    {
+        "date": "2026-05-07",
+        "total_occupancy": 15,
+        "departments": {
+            "ER": "1.2 Beds",
+            "ICU": "1.7 Beds",
+            "D1": "0.0 Beds",
+            "D2": "4.0 Beds",
+            "D3": "8.1 Beds"
+        }
+    },
+    {
+        "date": "2026-05-08",
+        "total_occupancy": 24,
+        "departments": {
+            "ER": "1.8 Beds",
+            "ICU": "2.8 Beds",
+            "D1": "0.0 Beds",
+            "D2": "6.5 Beds",
+            "D3": "12.9 Beds"
+        }
+    },
+    {
+        "date": "2026-05-09",
+        "total_occupancy": 29,
+        "departments": {
+            "ER": "2.2 Beds",
+            "ICU": "3.3 Beds",
+            "D1": "0.0 Beds",
+            "D2": "7.8 Beds",
+            "D3": "15.6 Beds"
+        }
+    },
+    {
+        "date": "2026-05-10",
+        "total_occupancy": 33,
+        "departments": {
+            "ER": "2.5 Beds",
+            "ICU": "3.8 Beds",
+            "D1": "0.0 Beds",
+            "D2": "8.9 Beds",
+            "D3": "17.8 Beds"
+        }
+    },
+    {
+        "date": "2026-05-11",
+        "total_occupancy": 34,
+        "departments": {
+            "ER": "2.6 Beds",
+            "ICU": "3.9 Beds",
+            "D1": "0.0 Beds",
+            "D2": "9.2 Beds",
+            "D3": "18.3 Beds"
+        }
+    },
+    {
+        "date": "2026-05-12",
+        "total_occupancy": 34,
+        "departments": {
+            "ER": "2.6 Beds",
+            "ICU": "3.9 Beds",
+            "D1": "0.0 Beds",
+            "D2": "9.2 Beds",
+            "D3": "18.3 Beds"
+        }
+    },
+    {
+        "date": "2026-05-13",
+        "total_occupancy": 32,
+        "departments": {
+            "ER": "2.5 Beds",
+            "ICU": "3.7 Beds",
+            "D1": "0.0 Beds",
+            "D2": "8.6 Beds",
+            "D3": "17.2 Beds"
+        }
+    }
+]

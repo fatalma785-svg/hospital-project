@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments</title>
+    <link rel="stylesheet" href="NGH_main.css">
+    <link rel="stylesheet" href="footerandheader.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div class="dash-header">
+    <div class="header-left">
+        <img src="logo.png" class="dash-logo" alt="Logo">
+        <div>
+            <h2>National Guard Hospital</h2>
+            <p>Department Capacity & Load Management</p>
+        </div>
+    </div>
+    <div class="header-nav">
+        <button class="btn btn-light" onclick="location.href='NGH_dashboard.html'">Dashboard</button>
+        <button class="btn btn-light" onclick="location.href='NGH_capacity.html'">Department</button>
+        <button class="btn btn-light" onclick="location.href='future.html'">Future Forecast</button>
+        <button class="btn btn-danger" onclick="location.href='logout.php'">Logout</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ── Summary Cards ── -->
+    <div class="cards">
+        <div class="card"><h3>Total Departments</h3><p id="totalDept">0</p></div>
+        <div class="card"><h3>Total Beds</h3><p id="totalBeds">0</p></div>
+        <div class="card"><h3>Total Available</h3><p id="totalAvailable">0</p></div>
+        <div class="card" id="criticalCard"><h3>Critical Departments</h3><p id="criticalCount">0</p></div>
+    </div>
+
+    <div class="grid-2">
+
+        <!-- ── LEFT: Department Table ── -->
+        <div class="panel">
+            <div class="top-toolbar">
+                <div class="left">
+                    <h3 style="margin:0;">Department Overview</h3>
+                </div>
+            </div>
+            <table class="dept-table">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Total</th>
+                        <th>Occupied</th>
+                        <th>Available</th>
+                        <th>Occupancy</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="deptTable"></tbody>
+            </table>
+        </div>
+
+        <!-- ── RIGHT: Transfer + Smart Recommendation ── -->
+        <div class="panel" style="display:flex; flex-direction:column; gap:0;">
+
+            <!-- Transfer form -->
+            <h3 style="margin-bottom:14px;">Transfer Patient</h3>
+
+            <label>Patient MRN</label>
+            <input type="text" id="transferMrn" class="input-compact"
+                   placeholder="Enter admitted patient MRN">
+
+            <!-- Patient info box (shown after MRN lookup) -->
+            <div id="transferPatientInfo"
+                 class="patient-box patient-compact hidden"
+                 style="margin-top:10px; background:#f8f9fa; padding:12px;
+                        border-radius:8px; border:1px solid #e0e0e0;">
+                <div style="display:grid; grid-template-columns:1fr 1fr;
+                            gap:8px; font-size:0.85rem; color:#333;">
+                    <div><strong>Name:</strong> <span id="tpName" style="color:#555;">-</span></div>
+                    <div><strong>Age:</strong>  <span id="tpAge"  style="color:#555;">-</span></div>
+                    <div><strong>Current Dept:</strong> <span id="tpDept" style="color:#555;">-</span></div>
+                    <div><strong>Status:</strong> <span id="tpStatus" style="color:#555;">-</span></div>
+                    <div style="grid-column:span 2; margin-top:4px;
+                                border-top:1px solid #eee; padding-top:4px;">
+                        <strong>Diagnosis:</strong> <span id="tpDiag" style="color:#555;">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <label style="margin-top:14px;">Target Department</label>
+            <select id="targetDept" class="input-compact">
+                <option value="">Select target department</option>
+            </select>
+
+            <div class="selected-box">
+                <strong>Selected Department:</strong>
+                <div id="selectedDept">None</div>
+            </div>
+
+            <button class="btn btn-primary" onclick="transferPatient()">Transfer</button>
+            <p id="transferMsg" class="msg"></p>
+
+            <hr style="border:none; border-top:1px solid #eee; margin:18px 0 14px;">
+
+            <!-- ── Smart Recommendation Section ── -->
+            <div id="recSection">
+
+                <div style="display:flex; align-items:center;
+                            justify-content:space-between; margin-bottom:4px;">
+                    <h3 style="margin:0;">Suggested Departments</h3>
+                    <!-- Score legend -->
+                    <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#777;">
+                        <span style="display:inline-flex; align-items:center; gap:3px;">
+                            <span style="width:8px; height:8px; border-radius:50%;
+                                         background:#d4edda; border:1px solid #b2d8bb;
+                                         display:inline-block;"></span> Good
+                        </span>
+                        <span style="display:inline-flex; align-items:center; gap:3px;">
+                            <span style="width:8px; height:8px; border-radius:50%;
+                                         background:#fff3cd; border:1px solid #e6d87b;
+                                         display:inline-block;"></span> Fair
+                        </span>
+                        <span style="display:inline-flex; align-items:center; gap:3px;">
+                            <span style="width:8px; height:8px; border-radius:50%;
+                                         background:#f0f0f0; border:1px solid #ccc;
+                                         display:inline-block;"></span> Low
+                        </span>
+                    </div>
+                </div>
+
+                <p style="font-size:12px; color:#888; margin:0 0 12px;">
+                    Enter a patient MRN above — the system will rank departments
+                    by capacity, specialty match, load stability, and patient urgency.
+                </p>
+
+                <!-- Recommendation cards injected here by JS -->
+                <div id="recommendList">
+                    <div class="rec-item" style="color:#aaa; font-size:0.85rem; padding:8px 0;">
+                        Waiting for patient MRN…
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end right panel -->
+    </div><!-- end grid-2 -->
+</div><!-- end container -->
+
+<div class="footer">© 2026 NGH Hospital System</div>
+
+<script src="NGH_capacity.js?v=2.0"></script>
+</body>
+</html>
