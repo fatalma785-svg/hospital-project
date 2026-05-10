@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>NGH | Future Forecasts</title>
+
+<link rel="stylesheet" href="./Future_forecast2.css" />
+<link rel="stylesheet" href="footerandheader.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./Future_forecast2.js"></script>
+</head>
+
+<body class="dash-page">
+
+<div class="dash-header">
+    <div class="header-left">
+        <img src="logo.png" class="dash-logo" alt="Logo">
+        <div>
+            <h2>National Guard Hospital</h2>
+            <p>Future forecasts</p>
+        </div>
+    </div>
+
+    <div class="header-nav">
+        <button class="btn btn-light" onclick="location.href='NGH_dashboard.html'">Dashboard</button>
+        <button class="btn btn-light" onclick="location.href='NGH_capacity.html'">Department</button>
+        <button class="btn btn-light" onclick="location.href='future.html'">Future Forecast</button>
+        <button class="btn btn-danger" onclick="location.href='logout.php'">Logout</button>
+    </div>
+</div>
+
+<main class="container">
+
+
+    <!-- Charts -->
+    <div class="grid-2">
+
+        <div class="panel">
+            <h3>Bed Occupancy Forecast (Next week)</h3>
+            <img src="outputs/occupancychart.png" style="width:100%;">
+            <p class="hint">Shows predicted patient occupancy for the next 7 days.</p>
+        </div>
+
+        <div class="panel">
+            <h3>Bed Demand Forecast (Next Week)</h3>
+            <img src="outputs/demandchart.png" style="width:100%;">
+            <p class="hint">Projected bed demand for the upcoming 7 days.</p>
+        </div>
+
+    </div>
+
+    <!-- Dept Chart -->
+    <div class="panel" style="width:90%; max-width:1000px; margin:0 auto 20px auto;">
+        <h3>Bed Occupancy by Dept. (Next Week)</h3>
+
+        <img src="outputs/dept_consolidated.png" style="width:100%; border-radius:4px;">
+
+        <div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:6px; font-size:0.85em;">
+            <strong>Guide:</strong> Numbers inside colored areas represent bed counts per department.
+        </div>
+    </div>
+
+ <!-- Prediction Model -->
+<!-- ADDED THE ID HERE SO THE BUTTON WORKS -->
+<div class="panel" id="prediction-section">
+    <h3>Prediction Model Results</h3>
+
+    <div class="selected-box" id="deptTimeline" style="margin-top:15px;">
+        <strong>Next Week Department Breakdown:</strong>
+        Loading...
+    </div>
+
+    <div id="deptResultsList"
+         style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:15px; margin-top:20px;">
+    </div>
+
+    <div class="selected-box" id="patientPrediction">
+        <strong>Shortage Risk:</strong> Loading...
+    </div>
+</div>
+
+<div class="alert-normal" id="forecastStatus">
+    Model Status: Ready
+</div>
+
+</main>
+
+<!-- Scroll Controls -->
+<div class="scroll-controls">
+    <button class="btn-scroll" onclick="scrollToTop()" title="Go to Top">↑</button>
+    <button class="btn-scroll" onclick="scrollToPredictions()" title="Go to Predictions">↓</button>
+</div>
+
+<div class="footer">
+    © 2026 NGH Hospital System
+</div>
+
+</body>
+</html>

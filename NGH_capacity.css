@@ -1,0 +1,55 @@
+body{
+    margin:0;
+    font-family:'Segoe UI';
+    background:#f4f8f6;
+}
+
+/* نفس الداشبورد */
+.dash-header{
+    background:#0b3c6d;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* layout */
+.container{
+    padding:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+/* cards */
+.card{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+}
+
+/* table */
+.dept-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.dept-table th, .dept-table td{
+    padding:12px;
+    border-bottom:1px solid #eee;
+}
+
+/* 🔥 status colors */
+.chip{
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.low{background:#d4edda; color:#155724;}
+.moderate{background:#fff3cd; color:#856404;}
+.high{background:#ffe0b2; color:#8a4b00;}
+.critical{background:#f8d7da; color:#721c24;}
